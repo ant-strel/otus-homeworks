@@ -1,0 +1,69 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+ 
+option csharp_namespace = "CustomerGrpc";
+ 
+package customer;
+
+service Customer
+{ 
+  rpc ListCustomers(google.protobuf.Empty) returns (ListResponse);
+  rpc GetCustomer(CustomerRequest) returns (CustomerResponse);
+  rpc CreateCustomer(CreateOrEditCustomerRequest) returns (CustomerResponse);
+  rpc UpdateCustomer(EditCustomerRequest) returns (google.protobuf.Empty);
+  rpc DeleteCustomer(CustomerRequest) returns (google.protobuf.Empty);
+}
+
+message EditCustomerRequest{
+  CustomerRequest id = 1;
+  CreateOrEditCustomerRequest request = 2;
+}
+
+message CreateOrEditCustomerRequest{
+  string firstName = 1;
+  string lastName = 2;
+  string email = 3;
+  repeated PreferenceList preferenceIds = 4;
+}
+
+message PreferenceList{
+  string id = 1;
+}
+
+message CustomerRequest{
+  string id = 1;
+}
+
+message ListResponse{
+  repeated CustomerShortResponse customers = 1;
+}
+
+message CustomerShortResponse{
+  string id = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string email = 4;
+}
+
+message CustomerResponse{
+  string id = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string email = 4;
+  repeated PreferenceResponse preferences = 5;
+  repeated CustomerShortResponse promoCodes = 6;
+}
+
+message PreferenceResponse{
+  string id = 1;
+  string name = 2;
+}
+
+message PromoCodeShortResponse{
+  string id = 1;
+  string code = 2;
+  string serviceInfo = 3;
+  string beginDate = 4;
+  string endDate = 5;
+  string pertnerName = 6;
+}

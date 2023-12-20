@@ -1,0 +1,20 @@
+image: mcr.microsoft.com/dotnet/sdk:6.0
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script: "cd src; dotnet build -c Release"
+  artifacts:
+    paths:
+      - src/
+
+deploy:
+  stage: deploy
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login --username "$CI_REGISTRY_USER" --password-stdin
+    - docker build -t ilyagurevich/promocode_factory:promocode_factory .
+    - docker push ilyagurevich/promocode_factory:promocode_factory
+    - docker-compose up -d

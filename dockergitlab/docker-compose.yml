@@ -1,0 +1,41 @@
+version: '3'
+
+networks:
+  dev:
+    driver: bridge
+    
+services:
+
+  postgres:
+    container_name: postgres
+    image: postgres:latest # use latest official postgres version
+    restart: always
+    environment: # configure postgres 
+        - POSTGRES_USER=admin
+        - POSTGRES_DB=Database
+        - POSTGRES_PASSWORD=admin        
+    ports: 
+        - "55432:5432"
+    volumes: 
+        - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - dev
+        
+  web:
+    build:
+      context: .
+      dockerfile: src\Otus.Teaching.PromoCodeFactory.WebHost\Dockerfile
+    container_name: 'web'
+    restart: always
+    ports:
+      - "85:80"
+    depends_on:
+      - postgres      
+    networks:
+      - dev
+  
+
+
+volumes: # named volumes can be managed easier using docker-compose
+  postgres_data:
+  
